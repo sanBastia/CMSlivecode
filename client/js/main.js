@@ -1,5 +1,7 @@
 $(document).ready(function () {
-
+  if (!localStorage.getItem('token')) {
+    window.location.href = 'http://127.0.0.1:8080/index.html'
+  }
   // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
   $('.modal').modal()
 })
@@ -181,4 +183,9 @@ function editing (value) {
       console.log(err)
     }
   })
+}
+
+function logout () {
+  localStorage.removeItem('token')
+  window.location.href = 'http://127.0.0.1:8080/index.html'
 }
