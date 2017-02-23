@@ -40,7 +40,6 @@
         <table>
        <thead>
          <tr>
-            <th data-field="number">Number</th>
              <th data-field="letter">Letter</th>
              <th data-field="frequency">Frequency</th>
              <th data-field="action" rowspan="2">Action</th>
@@ -56,12 +55,12 @@
     <div id="test2" class="col s12"></div>
   </div>
   <div class="fixed-action-btn">
-<a class="btn-floating btn-large red" href="#modal1">
+<a class="btn-floating btn-large red" href="#modalcreatedata">
  <i class="large material-icons">mode_edit</i>
 </a>
 </div>
 
-<div id="modal1" class="modal">
+<div id="modalcreatedata" class="modal">
     <div class="modal-content">
       <h3>Create Data</h3>
       <div class="divider">
@@ -81,6 +80,27 @@
       </div>
     </div>
   </div>
+
+  <div id="modalediting" class="modal">
+      <div class="modal-content">
+        <h3>Create Data</h3>
+        <div class="divider">
+        </div>
+        <div class="row">
+          <form id="formdata" method="post">
+            <div class="input-field col s6">
+           <input placeholder="Letter" id="editingletter" name="letter" type="text">
+         </div>
+         <div class="input-field col s6">
+           <input placeholder="Frequency" id="editingfrequency" name="frequency" type="text" >
+         </div>
+         <button class="btn waves-effect waves-light" type="submit">Submit
+           <i class="material-icons right">send</i>
+          </button>
+          </form>
+        </div>
+      </div>
+    </div>
 </div>
     <!--Import jQuery before materialize.js-->
 

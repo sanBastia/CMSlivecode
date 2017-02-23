@@ -14,11 +14,38 @@ module.exports = {
     })
   },
   read: function (req, res) {
-    model.find()
+    model.find({is_deleted: 0})
       .then(function (data) {
         res.json({read: data})
       }).catch(function (err) {
       res.json({err: err})
+    })
+  },
+  delete: function (req, res) {
+    let id = {
+      '_id': req.body.objid
+    }
+    model.findOne(id)
+      .then(function (data) {
+        data.is_deleted = 1
+        data.save(function (err) {
+          if (err)
+            res.json({errorsave: err})
+        })
+        res.json({delete: true})
+      }).catch(function (err) {
+      res.json({notfound: err})
+    })
+  },
+  beforeUpdate: function (req, res) {
+    let id = {
+      '_id': req.params.id
+    }
+    model.findOne(id)
+      .then(function (data) {
+        res.json({update: data})
+      }).catch(function (err) {
+      res.json({notfound: err})
     })
   }
 

@@ -12,16 +12,15 @@ $('#formdata').click(function (e) {
     dataType: 'json',
     success: function (msg) {
       if (msg.success) {
-        $('#modal1').modal('close')
-        let table = `<tr>
-          <td>1</td>
+        $('#modalcreatedata').modal('close')
+        let table = `<tr id="row_${msg.success._id}">
           <td>${msg.success.letter}</td>
           <td>${msg.success.frequency}</td>
-          <td rowspan="2">
-            <button class="btn waves-effect waves-light teal accent-2"  name="action">edit
+          <td>
+            <button class="btn waves-effect waves-light teal accent-2" onclick="editing('${msg.success._id}')">edit
             <i class="material-icons right">mode_edit</i>
            </button>
-           <button class="btn waves-effect waves-light red darken-4"  name="action">Delete
+           <button class="btn waves-effect waves-light red darken-4" onclick="deleting('${msg.success._id}')">Delete
              <i class="material-icons right">delete</i>
             </button>
          </td>
@@ -43,31 +42,29 @@ $('#formdata').click(function (e) {
 $('#formbody').ready(function () {
   $.ajax({
     url: 'http://localhost:3000/cms/data',
-    type: 'POST',
-    data: $(this).serialize(),
-    dataType: 'json',
+    type: 'GET',
     success: function (msg) {
-      if (msg.success) {
-        $('#modal1').modal('close')
-        let table = `<tr>
-          <td>1</td>
-          <td>${msg.success.letter}</td>
-          <td>${msg.success.frequency}</td>
-          <td rowspan="2">
-            <button class="btn waves-effect waves-light teal accent-2"  name="action">edit
-            <i class="material-icons right">mode_edit</i>
-           </button>
-           <button class="btn waves-effect waves-light red darken-4"  name="action">Delete
-             <i class="material-icons right">delete</i>
-            </button>
-         </td>
-        </tr>`
-
-        $('#formbody').append(table)
+      if (msg.read) {
+        let table = ''
+        msg.read.forEach(function (item) {
+          table += `<tr id="row_${item._id}">
+            <td>${item.letter}</td>
+            <td>${item.frequency}</td>
+            <td>
+              <button class="btn waves-effect waves-light teal accent-2" onclick="editing('${item._id}')" href="#modalediting">edit
+              <i class="material-icons right">mode_edit</i>
+             </button>
+             <button class="btn waves-effect waves-light red darken-4"  onclick="deleting('${item._id}')">Delete
+               <i class="material-icons right">delete</i>
+              </button>
+           </td>
+          </tr>`
+        })
+        $('#formbody').html(table)
       }
 
       if (msg.err) {
-        console.log(err)
+        console.log(msg.err)
       }
     },
     error: function (err) {
@@ -75,3 +72,49 @@ $('#formbody').ready(function () {
     }
   })
 })
+
+function deleting (value) {
+  swal({
+    title: 'Are you sure?',
+    text: 'You will Delete this row !',
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#DD6B55',
+    confirmButtonText: 'Yes, delete it!',
+    closeOnConfirm: true
+  },
+    function () {
+      $.ajax({
+        url: 'http://localhost:3000/cms/data',
+        type: 'DELETE',
+        data: {
+          objid: value
+        },
+        dataType: 'json',
+        success: function (data) {
+          if (data.delete)
+            $(`#row_${value}`).remove()
+          else
+            console.log(data.err)
+        },
+        error: function (err) {
+          console.log(err)
+        }
+      })
+    })
+}
+
+function editing (value) {
+  $.ajax({
+    url: `http://localhost:3000/cms/data/${value}`,
+    type: 'GET',
+    success: function (data) {
+      if (data.update)
+        $('#editingletter').val(`${data.update.letter}`)
+      $('#editingfrequency').val(`${data.update.frequency}`)
+    },
+    error: function (err) {
+      console.log(err)
+    }
+  })
+}
