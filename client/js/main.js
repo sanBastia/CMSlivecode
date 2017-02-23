@@ -1,9 +1,10 @@
 $(document).ready(function () {
+
   // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
   $('.modal').modal()
 })
 
-$('#formdata').click(function (e) {
+$('#formdata').submit(function (e) {
   e.preventDefault()
   $.ajax({
     url: 'http://localhost:3000/cms/data',
@@ -27,6 +28,41 @@ $('#formdata').click(function (e) {
         </tr>`
 
         $('#formbody').append(table)
+        $('#datafrequency').val('')
+        $('#dataletter').val('')
+      }
+
+      if (msg.err) {
+        console.log(err)
+      }
+    },
+    error: function (err) {
+      console.log(err)
+    }
+  })
+})
+
+$('#formedit').submit(function (e) {
+  e.preventDefault()
+  $.ajax({
+    url: 'http://localhost:3000/cms/edit',
+    type: 'POST',
+    data: $(this).serialize(),
+    dataType: 'json',
+    success: function (msg) {
+      $('#modalediting').modal('close')
+      if (msg.update) {
+        let table = `<td>${msg.update.letter}</td>
+          <td>${msg.update.frequency}</td>
+          <td>
+            <button class="btn waves-effect waves-light teal accent-2" onclick="editing('${msg.update._id}')">edit
+            <i class="material-icons right">mode_edit</i>
+           </button>
+           <button class="btn waves-effect waves-light red darken-4"  onclick="deleting('${msg.update._id}')">Delete
+             <i class="material-icons right">delete</i>
+            </button>
+         </td>`
+        $(`#row_${msg.update._id}`).html(table)
       }
 
       if (msg.err) {
@@ -51,7 +87,7 @@ $('#formbody').ready(function () {
             <td>${item.letter}</td>
             <td>${item.frequency}</td>
             <td>
-              <button class="btn waves-effect waves-light teal accent-2" onclick="editing('${item._id}')" href="#modalediting">edit
+              <button class="btn waves-effect waves-light teal accent-2" onclick="editing('${item._id}')">edit
               <i class="material-icons right">mode_edit</i>
              </button>
              <button class="btn waves-effect waves-light red darken-4"  onclick="deleting('${item._id}')">Delete
@@ -70,6 +106,32 @@ $('#formbody').ready(function () {
     error: function (err) {
       console.log(err)
     }
+  })
+})
+
+$('#formsearch').submit(function (e) {
+  e.preventDefault()
+
+  $.ajax({
+    url: 'http://localhost:3000/cms/search',
+    type: 'POST',
+    data: $(this).serialize(),
+    dataType: 'json',
+    success: function (data) {
+      if (data.success) {
+        let table = ''
+        data.success.forEach(function (item) {
+          table += `<tr>
+            <td>${item.letter}</td>
+            <td>${item.frequency}</td>
+          </tr>`
+        })
+        $('#searchformbody').html(table)
+        $('#modalsearch').modal('open')
+      }
+    },
+    error: function (err) {}
+
   })
 })
 
@@ -106,12 +168,14 @@ function deleting (value) {
 
 function editing (value) {
   $.ajax({
-    url: `http://localhost:3000/cms/data/${value}`,
+    url: `http://localhost:3000/cms/edit/${value}`,
     type: 'GET',
     success: function (data) {
       if (data.update)
-        $('#editingletter').val(`${data.update.letter}`)
+        $('#modalediting').modal('open')
+      $('#editingletter').val(`${data.update.letter}`)
       $('#editingfrequency').val(`${data.update.frequency}`)
+      $('#hiddenobjid').val(`${data.update._id}`)
     },
     error: function (err) {
       console.log(err)

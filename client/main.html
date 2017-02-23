@@ -29,12 +29,18 @@
     </div>
     <div id="test1" class="col s12">
       <div class="row">
-        <div class="input-field col s6">
-       <input placeholder="Search By Letter" id="first_name" type="text" class="validate">
-     </div>
-     <div class="input-field col s6">
-       <input placeholder="Search By Frequency" id="last_name" type="text" class="validate">
-     </div>
+        <form id="formsearch" method="post">
+          <div class="input-field col s6">
+         <input placeholder="Search By Letter" id="first_name" name="searchletter" type="text" class="validate">
+       </div>
+       <div class="input-field col s6">
+         <input placeholder="Search By Frequency" id="last_name" name="searchfrequency" type="text" class="validate">
+       </div>
+       <button class="btn waves-effect waves-light teal accent-2" type="submit">Search
+       <i class="material-icons right">send</i>
+      </button>
+        </form>
+
       </div>
       <div class="row">
         <table>
@@ -68,10 +74,10 @@
       <div class="row">
         <form id="formdata" method="post">
           <div class="input-field col s6">
-         <input placeholder="Letter" name="letter" type="text" class="validate">
+         <input placeholder="Letter" id="dataletter" name="letter" type="text" class="validate">
        </div>
        <div class="input-field col s6">
-         <input placeholder="Frequency" name="frequency" type="text" class="validate">
+         <input placeholder="Frequency" id="datafrequency" name="frequency" type="text" class="validate">
        </div>
        <button class="btn waves-effect waves-light" type="submit">Submit
          <i class="material-icons right">send</i>
@@ -81,18 +87,19 @@
     </div>
   </div>
 
-  <div id="modalediting" class="modal">
+<div id="modalediting" class="modal">
       <div class="modal-content">
-        <h3>Create Data</h3>
+        <h3>Edit Data</h3>
         <div class="divider">
         </div>
         <div class="row">
-          <form id="formdata" method="post">
+          <form id="formedit" method="post">
             <div class="input-field col s6">
-           <input placeholder="Letter" id="editingletter" name="letter" type="text">
+           <input placeholder="Letter" id="editingletter" name="editingletter" type="text">
          </div>
          <div class="input-field col s6">
-           <input placeholder="Frequency" id="editingfrequency" name="frequency" type="text" >
+           <input placeholder="Frequency" id="editingfrequency" name="editingfrequency" type="text" >
+           <input type="hidden" id="hiddenobjid" name="objid" value="" >
          </div>
          <button class="btn waves-effect waves-light" type="submit">Submit
            <i class="material-icons right">send</i>
@@ -102,6 +109,26 @@
       </div>
     </div>
 </div>
+
+<div id="modalsearch" class="modal">
+    <div class="modal-content">
+      <h3>Search Data</h3>
+      <div class="divider">
+      </div>
+      <div class="row">
+        <table>
+       <thead>
+         <tr>
+             <th data-field="letter">Letter</th>
+             <th data-field="frequency">Frequency</th>
+         </tr>
+       </thead>
+       <tbody id="searchformbody">
+       </tbody>
+     </table>
+      </div>
+    </div>
+  </div>
     <!--Import jQuery before materialize.js-->
 
 
